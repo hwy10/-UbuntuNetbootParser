@@ -32,7 +32,7 @@ if __name__ == "__main__":
     
     # using BeautifulSoup to analyze
     
-    soup = BeautifulSoup(doc)
+    soup = BeautifulSoup(doc, "html.parser")
     links = soup.find("ul").find_all("a")
     
     # download image files
