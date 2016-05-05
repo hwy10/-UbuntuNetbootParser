@@ -19,7 +19,7 @@ if __name__ == "__main__":
     output_menu_path = conf.get("output_menu_path") or "linux.menu"
     image_base_url = conf.get("image_base_url") or "http://cdimage.ubuntu.com/netboot/"
     image_download_path = conf.get("image_download_path") or "linux_netboot_images"
-    image_file_list = conf.get("image_file_list") or ["initrd.gz", "linux", "pxelinux.0"] # need test
+    image_file_list = (conf.get("image_file_list") or "initrd.gz;linux;pxelinux.0").split(";")
     architecture = conf.get("default_architecture") or "amd64"
     menu_template_path = conf.get("menu_template_path") or "menu_template.txt"
     menu_file_path = conf.get("menu_file_path") or "linux.menu"
@@ -43,10 +43,9 @@ if __name__ == "__main__":
         link_req = urllib.request.Request(link_url)
         link_html = urllib.request.urlopen(link_req)
         link_doc = link_html.read()
-        
         link_soup = BeautifulSoup(link_doc)
         link_a = link_soup.find('a', text = architecture)
-        
+
         dir_path = os.path.join(image_download_path, link.text)
         if not os.path.isdir(dir_path):
             os.makedirs(dir_path)
