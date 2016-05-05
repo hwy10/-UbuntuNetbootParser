@@ -5,6 +5,7 @@ import socket
 from bs4 import BeautifulSoup
 import os
 from mako.template import Template
+import shutil
 
 def urlretrieve_report(count, block_size, total_size):
     print ("%0.2f%%" %(100.0 * count * block_size/ total_size), end='\r')
@@ -35,8 +36,14 @@ if __name__ == "__main__":
     soup = BeautifulSoup(doc, "html.parser")
     links = soup.find("ul").find_all("a")
     
-    # download image files
+    # delete previous images
     
+    if os.path.isdir(image_download_path):
+        shutil.rmtree(image_download_path)
+    if os.path.isfile(image_download_path):
+        os.remove(image_download_path)
+    
+    # download image files
     image_list = []
     for link in links:
         link_url = image_base_url + link['href']
@@ -47,8 +54,8 @@ if __name__ == "__main__":
         link_a = link_soup.find('a', text = architecture)
 
         dir_path = os.path.join(image_download_path, link.text)
-        if not os.path.isdir(dir_path):
-            os.makedirs(dir_path)
+        
+        os.makedirs(dir_path)
         print(link.text)
         for file in image_file_list:
             file_url = link_a['href'] + "ubuntu-installer/" + architecture + "/" + file
